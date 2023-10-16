@@ -20,14 +20,15 @@ defer in javascript (first in last out)
 function Fugazi(a) {
 
 	defer47.fn(function () {
-		console.log("   [Fugazi][DEFER] Hello, -1-");
+		console.log("   [Fugazi]", a, "[DEFER] Hello, -1-");
 	});
 
 	defer47.fn(function () {
-		console.log("   [Fugazi][DEFER] World. -2-");
+		console.log("   [Fugazi]", a, "[DEFER] World. -2-");
 	});
 
-	console.log("   [Fugazi] Helloworld -normal scope-");
+	console.log("   [Fugazi]", a, "Helloworld -normal scope-");
+
 }
 
 
@@ -42,7 +43,7 @@ function Invoker() {
 
 	console.log("[Invoker] Dragon or knight make up your mind! -normal scope-");
 
-	Fugazi(1230);
+	Fugazi(9876);
 
 	console.log("[Invoker] EXIT");
 	return

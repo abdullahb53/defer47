@@ -3,58 +3,52 @@ defer in javascript (first in last out)
 
 
 ```ruby
-[PhantomAssasin] INIT
-[PhantomAssasin] EXIT
-Phantom Defer 3
-Phantom Defer 2
-Phantom Defer 1
 [Invoker] INIT
+    [Fugazi] 1230 Helloworld -normal scope-
+    [Fugazi] 1230 [DEFER] World. -2-
+    [Fugazi] 1230 [DEFER] Hello, -1-
+ [Invoker] Dragon or knight make up your mind! -normal scope-
+    [Fugazi] 9876 Helloworld -normal scope-
+    [Fugazi] 9876 [DEFER] World. -2-
+    [Fugazi] 9876 [DEFER] Hello, -1-
 [Invoker] EXIT
-Invoker Defer 2
-Invoker Defer 1
+[Invoker] Defer #1
 ```
 
 ```javascript
 
-		function PhantomAssasin() {
-			console.log("[PhantomAssasin] INIT");
+function Fugazi(a) {
 
-			defer47.fn(function () {
-				console.log("Phantom Defer 1");
-			});
+	defer47.fn(function () {
+		console.log("   [Fugazi][DEFER] Hello, -1-");
+	});
 
+	defer47.fn(function () {
+		console.log("   [Fugazi][DEFER] World. -2-");
+	});
 
-			defer47.fn(function () {
-				console.log("Phantom Defer 2");
-			});
-
-
-			defer47.fn(function () {
-				console.log("Phantom Defer 3");
-			});
-
-			console.log("[PhantomAssasin] EXIT");
-			return
-		}
-
-		function Invoker() {
-			console.log("[Invoker] INIT");
-
-			defer47.fn(function () {
-				console.log("Invoker Defer 1");
-			});
+	console.log("   [Fugazi] Helloworld -normal scope-");
+}
 
 
-			defer47.fn(function () {
-				console.log("Invoker Defer 2");
-			});
+function Invoker() {
+	console.log("[Invoker] INIT")
 
-			console.log("[Invoker] EXIT");
-			return
-		}
+	Fugazi(1230);
 
-		PhantomAssasin();
-		Invoker();
+	defer47.fn(function () {
+		console.log("[Invoker] Defer #1");
+	});
+
+	console.log("[Invoker] Dragon or knight make up your mind! -normal scope-");
+
+	Fugazi(1230);
+
+	console.log("[Invoker] EXIT");
+	return
+}
+
+Invoker();
 ```
 
 

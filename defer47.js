@@ -8,7 +8,10 @@
 				for (let i = 0; i < defer47.storage.length; i++) {
 					if (defer47.storage[i].funcName == callerName) {
 						for (let j = defer47.storage[i].functions.length - 1; j >= 0; j--) {
-							defer47.storage[i].functions[j]();
+							if (defer47.storage[i].functions[j] != null) {
+								defer47.storage[i].functions[j]();
+								defer47.storage[i].functions[j] = null;
+							}
 						}
 						break;
 					}
@@ -43,6 +46,32 @@
 		}
 
 
+		var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
+		var ARGUMENT_NAMES = /([^\s,]+)/g;
+		function getParamNames(func) {
+			var fnStr = func.toString().replace(STRIP_COMMENTS, '');
+			var result = fnStr.slice(fnStr.indexOf('(') + 1, fnStr.indexOf(')')).match(ARGUMENT_NAMES);
+			if (result === null)
+				result = [];
+			return result;
+		}
+
+		function getBody(fn) {
+			let entire = fn.toString();
+			let body = entire.slice(entire.indexOf("{") + 1, entire.lastIndexOf("}"));
+			return body;
+		}
+
+
+		function AdjustParamsStr(paramArr) {
+			let res = "";
+			for (let i = 0; i < paramArr.length; i++) {
+				res = res + paramArr[i].toString() + ",";
+			}
+			return res.slice(0, -1);
+		}
+
+
 		// Catch corresponding function names.
 		function CatchFunctionName(pprop) {
 			let funcName = "";
@@ -63,6 +92,9 @@
 		// Inject new code parts to existed functions.
 		function InjectionFn(injectDeferred, funcName, fn) {
 			let functionString = fn.toString();
+			let AllParamaters = getParamNames(fn);
+			let paramsToSet = AdjustParamsStr(AllParamaters);
+
 			let positionToInject = functionString.lastIndexOf("}");
 			// If the function doesn't have return statement.
 			functionString = functionString.slice(0, positionToInject) + injectDeferred + functionString.slice(positionToInject);
@@ -76,11 +108,12 @@
 
 			// Regular expression to match return statements
 			const returnRegex = /return\s+[^;]*;/g;
-			const modifiedCode2 = modifiedCode.replace(returnRegex, (match) => {
+			var modifiedCode2 = modifiedCode.replace(returnRegex, (match) => {
 				return injectDeferred + ';\n' + match;
 			});
 
-			var modifiedFunction = new Function(modifiedCode2);
+			modifiedCode2 = modifiedCode2.replace("async", "");
+			var modifiedFunction = new Function(paramsToSet, modifiedCode2);
 			return modifiedFunction;
 		}
 
@@ -100,7 +133,7 @@
 				window[prop] = newFn;
 			}
 		}
-
+		
 		export default defer47;
 
 

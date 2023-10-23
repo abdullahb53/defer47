@@ -1,5 +1,6 @@
 ## defer47
-***Defer on javascript.***
+**Defer on javascript**<br/>
+Wrap functions with `defer47.fn()`. Eventually, wrapped functions will be executed order of LIFO. 
 
 
 ```ruby

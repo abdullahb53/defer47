@@ -1,5 +1,5 @@
-# defer47
-defer in javascript (first in last out)
+## defer47
+***Defer on javascript.***
 
 
 ```ruby
